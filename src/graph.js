@@ -1,51 +1,13 @@
-function initializeGraph() {
+function Graph() {
     // Create the input graph
-    var g = new dagreD3.graphlib.Graph()
+    this.dagreGraph =  new dagreD3.graphlib.Graph()
         .setGraph({})
         .setDefaultEdgeLabel(function () {
             return {};
         });
+}
 
-    // Here we"re setting nodeclass, which is used by our custom drawNodes function
-    // below.
-    g.setNode(0, {label: "TOP", class: "type-TOP"});
-    g.setNode(1, {label: "S", class: "type-S"});
-    g.setNode(2, {label: "NP", class: "type-NP"});
-    g.setNode(3, {label: "DT", class: "type-DT"});
-    g.setNode(4, {label: "This", class: "type-TK"});
-    g.setNode(5, {label: "VP", class: "type-VP"});
-    g.setNode(6, {label: "VBZ", class: "type-VBZ"});
-    g.setNode(7, {label: "is", class: "type-TK"});
-    g.setNode(8, {label: "NP", class: "type-NP"});
-    g.setNode(9, {label: "DT", class: "type-DT"});
-    g.setNode(10, {label: "an", class: "type-TK"});
-    g.setNode(11, {label: "NN", class: "type-NN"});
-    g.setNode(12, {label: "example", class: "type-TK"});
-    g.setNode(13, {label: ".", class: "type-."});
-    g.setNode(14, {label: "sentence", class: "type-TK"});
-
-    g.nodes().forEach(function (v) {
-        var node = g.node(v);
-        // Round the corners of the nodes
-        node.rx = node.ry = 5;
-    });
-
-    // Set up edges, no special attributes.
-    g.setEdge(3, 4);
-    g.setEdge(2, 3);
-    g.setEdge(1, 2);
-    g.setEdge(6, 7);
-    g.setEdge(5, 6);
-    g.setEdge(9, 10);
-    g.setEdge(8, 9);
-    g.setEdge(11, 12);
-    g.setEdge(8, 11);
-    g.setEdge(5, 8);
-    g.setEdge(1, 5);
-    g.setEdge(13, 14);
-    g.setEdge(1, 13);
-    g.setEdge(0, 1)
-
+Graph.prototype.renderGraph = function() {
     // Create the renderer
     var render = new dagreD3.render();
 
@@ -54,11 +16,73 @@ function initializeGraph() {
         svgGroup = svg.append("g");
 
     // Run the renderer. This is what draws the final graph.
-    render(d3.select("svg g"), g);
+    render(d3.select("svg g"), this.dagreGraph);
 
     // Center the graph
-    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    var xCenterOffset = (svg[0][0].clientWidth - this.dagreGraph.graph().width) / 2;
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-    svg.attr("height", g.graph().height + 40);
+    //svg.attr("height", this.dagreGraph.graph().height + 40);
+
+    // Set up zoom support
+    var zoom = d3.behavior.zoom().on("zoom", function() {
+            svgGroup.attr("transform", "translate(" + d3.event.translate + ")" +
+            "scale(" + d3.event.scale + ")");
+        });
+    svg.call(zoom);
 }
-initializeGraph();
+
+Graph.prototype.addNode = function(id, label) {
+    this.dagreGraph.setNode(id, {label: label});
+
+    var node = this.dagreGraph.node(id);
+    // Round the corners of the nodes
+    node.rx = node.ry = 5;
+}
+
+Graph.prototype.addEdge = function(parent, child) {
+    this.dagreGraph.setEdge(parent, child);
+}
+
+Graph.prototype.getNodes = function() {
+    return this.dagreGraph.nodes();
+}
+
+Graph.prototype.containsNode = function(id) {
+    return this.getNodes().indexOf(id.toString()) != -1;
+}
+
+var g = new Graph();
+
+g.addNode(0, "TOP");
+g.addNode(1, "S");
+g.addNode(2, "NP");
+g.addNode(3, "DT");
+g.addNode(4, "This");
+g.addNode(5, "VP");
+g.addNode(6, "VBZ");
+g.addNode(7, "is");
+g.addNode(8, "NP");
+g.addNode(9, "DT");
+g.addNode(10, "an");
+g.addNode(11, "NN");
+g.addNode(12, "example");
+g.addNode(13, ".");
+g.addNode(14, "sentence");
+
+g.addEdge(3, 4);
+g.addEdge(2, 3);
+g.addEdge(1, 2);
+g.addEdge(6, 7);
+g.addEdge(5, 6);
+g.addEdge(9, 10);
+g.addEdge(8, 9);
+g.addEdge(11, 12);
+g.addEdge(8, 11);
+g.addEdge(5, 8);
+g.addEdge(1, 5);
+g.addEdge(13, 14);
+g.addEdge(1, 13);
+g.addEdge(0, 1);
+
+g.renderGraph();
+
