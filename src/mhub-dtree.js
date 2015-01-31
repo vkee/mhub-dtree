@@ -52,7 +52,7 @@ var getNode = function(person) {
 		//Push the person into the queue
 		queue.push(person);
 		// Using the setNode for D3
-		setNode(nodeCounter, {label: person.name});
+		setNode(nodeCounter, person.name);
 		// Add a node property to the person 
 		person.push("node": nodeCounter); 
 		// Increase the global node counter so we have unique node numbers for everyone
