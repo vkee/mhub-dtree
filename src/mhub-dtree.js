@@ -36,7 +36,7 @@ var makeEdge = function(node1, node2) {
 // Main function of algorithm that processes one item from queue.
 var processLeader = function () {
     var leader = getNextLeader();
-    peopleLeadBy(leader, function(people) {
+    peopleLedBy(leader, function(people) {
         $.each(people, function(index, person) {
             makeNode(person);
             makeEdge(leader.id, person.id);
@@ -49,7 +49,7 @@ var getNextLeader = function() {
 }
 
 // @todo: unstub
-var peopleLeadBy = function(leader, successCallback) {
+var peopleLedBy = function(leader, successCallback) {
     //Query mission hub for the list of people that are leaders but not a member
     //of any group themselves.
     queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(json) {
