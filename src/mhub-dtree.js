@@ -1,7 +1,8 @@
 var secret = '40e2d09610aa1bead4583720a2377e24f9fe2b1844b1299ceaff0c2d1186d2e2';
 var base_url = 'https://stage.missionhub.com/apis/v3/';
 var queue = [];
-var nodeCounter = 0;
+var discipleship = new Graph();
+var nodesCreated = [];
 
 var mocks = {
     "T1Leader": {
@@ -20,12 +21,12 @@ var mocks = {
 var processLeader = function () {
     var leader = getNextLeader();
     var groupIds = getGroupIdsLeadBy(leader);
-    var leaderNode = getNode(leader);
+    //var leaderNode = getNode(leader);
     $.each(groupIds, function(index, groupId) {
         var people = getMembersForGroupId(groupId);
         $.each(people, function(index, person) {
-            var personNode = getNode(person);
-            addEdge(leaderNode, personNode);
+            makeNode(person);
+            makeEdge(leader.id, person.id);
         });
     });
 }
@@ -43,32 +44,24 @@ var getGroupIdsLeadBy = function(leader) {
 }
 
 // @todo: unstub
-var getNode = function(person) {
+var makeNode = function(person) {
     //If person hasn't been encountered yet, create new node and return
     // This should catch if there is no node property yet in person. It should work for both
     // undefined cases and null cases
-    if (person.node == null)
+    if (nodesCreated.indexOf(person.id) == -1))
     {
         //Push the person into the queue
         queue.push(person);
-        // Using the setNode for D3
-        setNode(nodeCounter, {label: person.name});
-        // Add a node property to the person
-        person.push({"node": nodeCounter});
-        // Increase the global node counter so we have unique node numbers for everyone
-        // Israel: I think that we could use the person's id for setNode instead of a
-        // global node counter but I think this is the way you wanted it formatted
-        nodeCounter++;
-        return person.node;
+		//Push the id into created notes
+		nodesCreated.push(person.id);
+        // Using the addNode for D3
+        discipleship.addNode(person.id, person.name);
     }
-    //Else, return existing node
-    else
-        return person.node;
 }
 
 // @todo: unstub
-var addEdge = function(node1, node2) {
-
+var makeEdge = function(node1, node2) {
+	discipleship.addEdge(node1, node2);
 }
 
 // Gets the root leaders from Missionhub and begins processing the queue
@@ -114,6 +107,10 @@ var queryMissionHub = function(endpoint, options, successCallback)
 
 var init = function() {
     getRootLeaders();
+}
+
+var finish = function() {
+    discipleship.renderGraph();
 }
 
 //leaders
