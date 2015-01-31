@@ -19,9 +19,16 @@ Graph.prototype.renderGraph = function() {
     render(d3.select("svg g"), this.dagreGraph);
 
     // Center the graph
-    var xCenterOffset = (svg.attr("width") - this.dagreGraph.graph().width) / 2;
+    var xCenterOffset = (svg[0][0].clientWidth - this.dagreGraph.graph().width) / 2;
     svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-    svg.attr("height", this.dagreGraph.graph().height + 40);
+    //svg.attr("height", this.dagreGraph.graph().height + 40);
+
+    // Set up zoom support
+    var zoom = d3.behavior.zoom().on("zoom", function() {
+            svgGroup.attr("transform", "translate(" + d3.event.translate + ")" +
+            "scale(" + d3.event.scale + ")");
+        });
+    svg.call(zoom);
 }
 
 Graph.prototype.addNode = function(id, label) {
