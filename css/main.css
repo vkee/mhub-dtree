@@ -9,10 +9,6 @@ body{
     background-color: #D8D8D8;
 }
 
-g.type-TK > rect {
-    fill: #00ffd0;
-}
-
 text {
     font-weight: 300;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
@@ -20,12 +16,13 @@ text {
 }
 
 .node rect {
-    stroke: #999;
-    fill: #fff;
+    stroke: #46B0E7;
+    fill: #D6E0FF;
     stroke-width: 1.5px;
 }
 
 .edgePath path {
-    stroke: #333;
+    stroke: #888;
+    fill: #595959;
     stroke-width: 1.5px;
 }

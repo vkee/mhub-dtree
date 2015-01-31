@@ -54,7 +54,7 @@ var getNode = function(person) {
 		// Using the setNode for D3
 		setNode(nodeCounter, {label: person.name});
 		// Add a node property to the person 
-		person.push("node": nodeCounter); 
+		person.push({"node": nodeCounter});
 		// Increase the global node counter so we have unique node numbers for everyone
 		// Israel: I think that we could use the person's id for setNode instead of a 
 		// global node counter but I think this is the way you wanted it formatted
