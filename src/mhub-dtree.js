@@ -1,5 +1,5 @@
 var secret = '40e2d09610aa1bead4583720a2377e24f9fe2b1844b1299ceaff0c2d1186d2e2';
-var base_url = ''
+var base_url = 'https://stage.missionhub.com/apis/v3/';
 var queue = [];
 var nodeCounter = 0;
 
@@ -71,19 +71,50 @@ var addEdge = function(node1, node2) {
 
 }
 
+// Gets the root leaders from Missionhub and begins processing the queue
 var getRootLeaders = function() {
+    //Query mission hub for the list of people that are leaders but not a member
+    //of any group themselves.
+    queryMissionHub('people', {'filters[group_involvement_id]': 'none', 'filters[group_role]': 'leader'}, function(json) {
 
+        //Parse through the data from Missionhub and just take ID and name
+        $.each(json.people, function(index, person) {
+            queue.push({
+                id: person.id,
+                name: person.first_name+' '+person.last_name
+            });
+        });
+
+        // Begin processing the queue.
+        // @todo: unstub
+        //processLeader();
+        console.log(queue);
+    });
+}
+
+// Helper function to query a given endpoint on mission hub with a given set of
+// URL parameters
+var queryMissionHub = function(endpoint, options, successCallback)
+{
+    var url = base_url+endpoint+'?secret='+secret;
+
+    $.each(options, function(key, value) {
+        url += '&'+encodeURIComponent(key)+'='+encodeURIComponent(value);
+    });
+
+    $.ajax({
+        url: url,
+        dataType: 'jsonp',
+        success: successCallback,
+        error: function() {
+            console.log('Error querying Missionhub endpiont "'+endpoint+'"!');
+        }
+    });
 }
 
 var init = function() {
-    queue = getRootLeaders();
+    getRootLeaders();
 }
-
-while(queue.length > 0) {
-    processLeader();
-}
-
-
 
 //leaders
 //https://stage.missionhub.com/apis/v3/people?secret=40e2d09610aa1bead4583720a2377e24f9fe2b1844b1299ceaff0c2d1186d2e2&filters%5Bgroup_role%5D=leader
