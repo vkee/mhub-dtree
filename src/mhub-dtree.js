@@ -11,7 +11,7 @@ var mocks = {
         "id": 45,
         "name": "Nate Emerson"
     },
-    "T1LeaderGroups": [1, 3, 5],
+    "T1LeaderGroups": [1, 3, 5]
 };
 
 // Main function of algorithm that processes one item from queue.
@@ -40,19 +40,18 @@ var getGroupIdsLeadBy = function(leader) {
 }
 
 // @todo: unstub
-var getNode(person) {
+var getNode = function(person) {
     //If person hasn't been encountered yet, create new node and return
     //Else, return existing node
     return {};
 }
 
 // @todo: unstub
-var addEdge(node1, node2) {
+var addEdge = function(node1, node2) {
 
 }
 
-while(queue.length > 0)
-{
+while(queue.length > 0) {
     processLeader();
 }
 
