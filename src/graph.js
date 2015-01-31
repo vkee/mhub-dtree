@@ -8,12 +8,6 @@ function Graph() {
 }
 
 Graph.prototype.renderGraph = function() {
-    this.dagreGraph.nodes().forEach(function (v) {
-        var node = this.dagreGraph.node(v);
-        // Round the corners of the nodes
-        node.rx = node.ry = 5;
-    }, this);
-
     // Create the renderer
     var render = new dagreD3.render();
 
@@ -32,10 +26,22 @@ Graph.prototype.renderGraph = function() {
 
 Graph.prototype.addNode = function(id, label) {
     this.dagreGraph.setNode(id, {label: label});
+
+    var node = this.dagreGraph.node(id);
+    // Round the corners of the nodes
+    node.rx = node.ry = 5;
 }
 
 Graph.prototype.addEdge = function(parent, child) {
     this.dagreGraph.setEdge(parent, child);
+}
+
+Graph.prototype.getNodes = function() {
+    return this.dagreGraph.nodes();
+}
+
+Graph.prototype.containsNode = function(id) {
+    return this.getNodes().indexOf(id.toString()) != -1;
 }
 
 var g = new Graph();
