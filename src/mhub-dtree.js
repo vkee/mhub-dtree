@@ -31,7 +31,7 @@ var peopleLedBy = function(index) {
     // Query mission hub for the list of people that are leaders but not a member
     // of any group themselves.
     queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(members) {
-        getName(0, leader, members.group_memberships, index);      
+        getName(0, leader, members.group_memberships, index);
     });
 }
 
@@ -70,7 +70,7 @@ var getName = function(index_name, leader, members, index_leader){
 var getRootLeaders = function() {
     // Query mission hub for the list of people that are leaders but not a member
     // of any group themselves.
-    queryMissionHub('people', {'filters[group_involvement_id]': 'none', 'filters[group_role]': 'leader'}, function(json) {
+    queryMissionHub('people', {'filters[group_role]': 'leader'}, function(json) {
         //Parse through the data from Missionhub and just take ID and name
         $.each(json.people, function(index, person) {
             rootLeaders.push({
