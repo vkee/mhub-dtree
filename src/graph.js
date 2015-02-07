@@ -51,38 +51,38 @@ Graph.prototype.containsNode = function(id) {
     return this.getNodes().indexOf(id.toString()) != -1;
 }
 
-var g = new Graph();
+// var g = new Graph();
 
-g.addNode(0, "TOP");
-g.addNode(1, "S");
-g.addNode(2, "NP");
-g.addNode(3, "DT");
-g.addNode(4, "This");
-g.addNode(5, "VP");
-g.addNode(6, "VBZ");
-g.addNode(7, "is");
-g.addNode(8, "NP");
-g.addNode(9, "DT");
-g.addNode(10, "an");
-g.addNode(11, "NN");
-g.addNode(12, "example");
-g.addNode(13, ".");
-g.addNode(14, "sentence");
+// g.addNode(0, "TOP");
+// g.addNode(1, "S");
+// g.addNode(2, "NP");
+// g.addNode(3, "DT");
+// g.addNode(4, "This");
+// g.addNode(5, "VP");
+// g.addNode(6, "VBZ");
+// g.addNode(7, "is");
+// g.addNode(8, "NP");
+// g.addNode(9, "DT");
+// g.addNode(10, "an");
+// g.addNode(11, "NN");
+// g.addNode(12, "example");
+// g.addNode(13, ".");
+// g.addNode(14, "sentence");
 
-g.addEdge(3, 4);
-g.addEdge(2, 3);
-g.addEdge(1, 2);
-g.addEdge(6, 7);
-g.addEdge(5, 6);
-g.addEdge(9, 10);
-g.addEdge(8, 9);
-g.addEdge(11, 12);
-g.addEdge(8, 11);
-g.addEdge(5, 8);
-g.addEdge(1, 5);
-g.addEdge(13, 14);
-g.addEdge(1, 13);
-g.addEdge(0, 1);
+// g.addEdge(3, 4);
+// g.addEdge(2, 3);
+// g.addEdge(1, 2);
+// g.addEdge(6, 7);
+// g.addEdge(5, 6);
+// g.addEdge(9, 10);
+// g.addEdge(8, 9);
+// g.addEdge(11, 12);
+// g.addEdge(8, 11);
+// g.addEdge(5, 8);
+// g.addEdge(1, 5);
+// g.addEdge(13, 14);
+// g.addEdge(1, 13);
+// g.addEdge(0, 1);
 
-g.renderGraph();
+// g.renderGraph();
 
