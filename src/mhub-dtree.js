@@ -75,7 +75,7 @@ var getRootLeaders = function() {
         $.each(json.people, function(index, person) {
             rootLeaders.push({
                 id: person.id,
-                name: person.first_name + ' ' + person.last_name;
+                name: person.first_name + ' ' + person.last_name
             });
         });
 
