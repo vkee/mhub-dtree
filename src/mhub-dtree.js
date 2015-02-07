@@ -70,8 +70,8 @@ var peopleLedBy = function(leader, successCallback) {
         //         name: person.first_name+' '+person.last_name
         //     });
         // });
+        successCallback(json);
     });
-    successCallback(json);
 }
 
 // Gets the root leaders from Missionhub and begins processing the queue
