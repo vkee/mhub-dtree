@@ -30,7 +30,7 @@ var peopleLedBy = function(index) {
     // Query mission hub for the list of people that are leaders but not a member
     // of any group themselves.
     queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(members) {
-        if (members.length > 0){
+        if (members.group_memberships.length > 0){
             getName(0, leader, members.group_memberships, index);
         }
     });
@@ -45,7 +45,6 @@ var getName = function(index_name, leader, members, index_leader){
     console.log(member);
 
     queryMissionHub('people', {'filters[ids]': String(member.person_id)}, function(json) {
-
         person = {};
         full_person = json.people[0];
         person.id = full_person.id;
@@ -54,18 +53,19 @@ var getName = function(index_name, leader, members, index_leader){
         // Adding the graph objects
         makeNode(person);
         makeEdge(leader.id, person.id);
-
+        console.log('now here');
         // Once done adding all the members to the graph, move on to the next group
         if (index_name == (members.length - 1)){
             // Once done building all trees, render the graph
             if (index_leader == (rootLeaders.length - 1)){
-                console.log('index_leader ' + index_leader);   
+                console.log('all done');   
                 discipleship.renderGraph();
             } else {
                 // Otherwise keep building the tree with the next root leader
                 peopleLedBy(index_leader + 1);
             }
         } else {
+            console.log('index_leader ' + index_leader);
             // Otherwise keep building the tree
             getName(index_name + 1, leader, members, index_leader);
         }
