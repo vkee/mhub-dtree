@@ -9,7 +9,7 @@ var makeNode = function(person) {
     // Checks if a node has been created for a given person yet
     if (nodesCreated.indexOf(person.id) == -1)
     {
-        // The main issue is that just don't have name for person to create node so probably throwing error 
+        // The main issue is that just don't have name for person to create node so probably throwing error
         console.log('inside making the node');
         console.log(person);
         //Push the person into the queue
@@ -48,22 +48,21 @@ var getNextLeader = function() {
 // @todo: unstub
 var peopleLedBy = function(leader, successCallback) {
     // Getting all the members led by the leader
-    queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(members) {
-
-        // for each memeber, need to make another query to get the actual name and id of the person
-        // once receive that in the callback add node and edge to tree
-
-        // 
-
-        // $.each(people, function(index, person) {
-        //     // makeNode(person);
-        //     // makeEdge(leader.id, person.id);
-        // });
+    queryMissionHub('people', {'filters[group_involvement_id]': 'none', 'filters[group_role]': 'leader'}, function(json) {
+        //Parse through the data from Missionhub and just take ID and name
+        $.each(json.people, function(index, person) {
+            queue.push({
+                id: person.id,
+                name: person.first_name+' '+person.last_name
+            });
+        });
+        // Begin processing the queue.
+        processLeader();
     });
 
         //Parse through the data from Missionhub and just take ID and name
         // $.each(json.group_memberships, function(index, membership) {
-            
+
         // });
     successCallback(json);
         // $.each(json.people, function(index, person) {
