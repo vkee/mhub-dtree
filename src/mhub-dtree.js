@@ -1,5 +1,4 @@
-var secret = '40e2d09610aa1bead4583720a2377e24f9fe2b1844b1299ceaff0c2d1186d2e2',
-    base_url = 'https://stage.missionhub.com/apis/v3/',
+var base_url = 'https://stage.missionhub.com/apis/v3/',
     rootLeaders = [],
     discipleship = new Graph(),
     nodesCreated = [];
@@ -31,13 +30,19 @@ var peopleLedBy = function(index) {
     // Query mission hub for the list of people that are leaders but not a member
     // of any group themselves.
     queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(members) {
-        getName(0, leader, members.group_memberships, index);
+        if (members.length > 0){
+            getName(0, leader, members.group_memberships, index);
+        }
     });
 }
 
 // Get all the names of the people in a group and add them to the tree
 var getName = function(index_name, leader, members, index_leader){
     member = members[index_name];
+
+    console.log('index_name ' + index_name);
+    console.log('member');
+    console.log(member);
 
     queryMissionHub('people', {'filters[ids]': String(member.person_id)}, function(json) {
 
@@ -54,6 +59,7 @@ var getName = function(index_name, leader, members, index_leader){
         if (index_name == (members.length - 1)){
             // Once done building all trees, render the graph
             if (index_leader == (rootLeaders.length - 1)){
+                console.log('index_leader ' + index_leader);   
                 discipleship.renderGraph();
             } else {
                 // Otherwise keep building the tree with the next root leader
@@ -73,6 +79,7 @@ var getRootLeaders = function() {
     queryMissionHub('people', {'filters[group_role]': 'leader'}, function(json) {
         //Parse through the data from Missionhub and just take ID and name
         $.each(json.people, function(index, person) {
+            console.log(person);
             rootLeaders.push({
                 id: person.id,
                 name: person.first_name + ' ' + person.last_name
@@ -87,13 +94,14 @@ var getRootLeaders = function() {
 // URL parameters
 var queryMissionHub = function(endpoint, options, successCallback)
 {
-    var url = base_url + endpoint + '?secret=' + secret;
+    var url = base_url + endpoint + '?secret=' + secret + '&organization_id=941';
 
     $.each(options, function(key, value) {
         url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
     });
 
     $.ajax({
+        type: "GET",
         url: url,
         dataType: 'jsonp',
         success: successCallback,
