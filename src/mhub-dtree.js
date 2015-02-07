@@ -55,7 +55,7 @@ var peopleLedBy = function(leader, successCallback) {
     queryMissionHub('group_memberships', {'filters[leader_id]': leader.id}, function(json) {
         //Parse through the data from Missionhub and just take ID and name
         $.each(json.group_memberships, function(index, membership) {
-
+            console.log(membership);
         })
         successCallback(json);
         // $.each(json.people, function(index, person) {
