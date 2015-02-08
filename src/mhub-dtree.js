@@ -107,7 +107,7 @@ var getRootLeaders = function() {
 var queryMissionHub = function(endpoint, options, successCallback)
 {
     var url = base_url + endpoint + '?secret=' + secret + '&organization_id=941';
-
+    console.log(url);
     $.each(options, function(key, value) {
         url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
     });

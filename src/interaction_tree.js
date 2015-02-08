@@ -1,0 +1,102 @@
+var base_url = 'https://stage.missionhub.com/apis/v3/',
+    rootLeaders = [],
+    discipleship = new Graph(),
+    nodesCreated = [];
+
+// Make a D3 Node
+var makeNode = function(person) {
+    // Checks if a node has been created for a given person yet
+    if (nodesCreated.indexOf(person.id) == -1)
+    {
+        //Push the id into created notes
+        nodesCreated.push(person.id);
+        // Using the addNode for D3
+        discipleship.addNode(person.id, person.name);
+    }
+}
+
+// Get all the organizations
+var getOrganizations = function(){
+    queryMissionHub('organizations', {}, function(json){
+        organizations = [];
+
+        $.each(json.organizations, function(index, org){
+            organizations.push({
+                name: org.name,
+                id: org.id
+            })
+        });
+
+        // render organizations on the home page
+    });
+}
+
+// Gets the leaders from Missionhub
+var getLeaders = function(organization_id) {
+    // Query mission hub for the list of people that are leaders but not a member
+    // of any group themselves.
+    queryMissionHub('people', {'organization_id': organization_id,'filters[group_role]': 'leader'}, function(json) {
+        
+        leaders = [];
+
+        //Parse through the data from Missionhub and just take ID and name
+        $.each(json.people, function(index, person) {
+            console.log(person);
+            leaders.push({
+                id: person.id,
+                name: person.first_name + ' ' + person.last_name
+            });
+        });
+
+        // load the leaders onto the ui
+    });
+}
+
+// Gets the people from Missionhub
+var getPeople = function(organization_id) {
+    // Query mission hub for the list of people that are leaders but not a member
+    // of any group themselves.
+    queryMissionHub('people', {'organization_id': organization_id}, function(json) {
+        people = [];
+        //Parse through the data from Missionhub and just take ID and name
+        $.each(json.people, function(index, person) {
+            console.log(person);
+            people.push({
+                id: person.id,
+                name: person.first_name + ' ' + person.last_name
+            });
+        });
+
+        // load the people onto the ui
+    });
+}
+
+// Filters at https://github.com/CruGlobal/missionhub/blob/dev/app/models/interaction_filter.rb
+// initiator_ids seems to be broken
+// https://stage.missionhub.com/apis/v3/interactions?secret=a3c29680ae9cb5b1c028b56578466153&organization_id=941&filters[receiver_ids]=1403488&include=receiver,initiators
+
+var getInteractionTree = function(organization_id, person_id, interaction_type){
+    // make a query that returns name id pairs for people who have interacted with the person with an option interaction type if provided
+}
+
+
+// Helper function to query a given endpoint on mission hub with a given set of
+// URL parameters
+var queryMissionHub = function(endpoint, options, successCallback)
+{
+    var url = base_url + endpoint + '?secret=' + secret + '&organization_id=941';
+    console.log(url);
+    $.each(options, function(key, value) {
+        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
+    });
+
+    $.ajax({
+        type: "GET",
+        url: url,
+        dataType: 'jsonp',
+        success: successCallback,
+        error: function() {
+            console.log('Error querying Missionhub endpoint "' + endpoint + '"!');
+        }
+    });
+}
