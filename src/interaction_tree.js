@@ -81,7 +81,7 @@ var getPeople = function(organization_id) {
 // initiator_ids seems to be broken
 // https://stage.missionhub.com/apis/v3/interactions?secret=a3c29680ae9cb5b1c028b56578466153&organization_id=941&filters[receiver_ids]=1403488&include=receiver,initiators
 
-var getInteractionTree = function(organization_id, people_ids, interaction_type_ids){
+var getInteractionTree = function(organization_id, people_ids, interaction_type_ids, callback){
     arguments = {};
 
     if (organization_id != undefined){
@@ -99,17 +99,24 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type_
     arguments['include'] = 'receiver,initiators';
 
     queryMissionHub('interactions', arguments, function(json) {
-        console.log('interactions');
-        receiver = json.interactions[0].receiver;
-        name = receiver.first_name + ' ' + receiver.last_name;
-        console.log(name);
+        names = []
+        $.each(json.interactions, function(index, interaction){
+            name = interaction.receiver.first_name + ' ' + interaction.receiver.last_name;
+            names.push(name);
+        })
+        callback(names);        
     });
 }
 
 var getPersonInteractions = function(name, organization_id){
     queryMissionHub('people', {'organization_id': organization_id, 'filters[name_like]': name}, function(json){
-        getInteractionTree(organization_id, json.people[0].id, 1);
+        getInteractionTree(organization_id, json.people[0].id, 1, returnNames);
     });
+}
+
+var returnNames = function(names){
+    console.log(names);
+    return names;
 }
 
 // Helper function to query a given endpoint on mission hub with a given set of
