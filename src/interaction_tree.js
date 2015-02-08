@@ -100,18 +100,17 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type_
 
     queryMissionHub('interactions', arguments, function(json) {
         console.log('interactions');
-        console.log(json);
+        receiver = json.interactions[0].receiver;
+        name = receiver.first_name + ' ' + receiver.last_name;
+        console.log(name);
     });
 }
 
 var getPersonInteractions = function(name, organization_id){
     queryMissionHub('people', {'organization_id': organization_id, 'filters[name_like]': name}, function(json){
-        console.log('person');
-        console.log(json);
         getInteractionTree(organization_id, json.people[0].id, 1);
     });
 }
-
 
 // Helper function to query a given endpoint on mission hub with a given set of
 // URL parameters
