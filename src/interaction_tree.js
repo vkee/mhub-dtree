@@ -75,20 +75,40 @@ var getPeople = function(organization_id) {
 // initiator_ids seems to be broken
 // https://stage.missionhub.com/apis/v3/interactions?secret=a3c29680ae9cb5b1c028b56578466153&organization_id=941&filters[receiver_ids]=1403488&include=receiver,initiators
 
-var getInteractionTree = function(organization_id, person_id, interaction_type){
-    // make a query that returns name id pairs for people who have interacted with the person with an option interaction type if provided
+var getInteractionTree = function(organization_id, people_ids, interaction_type){
+    arguments = {};
+
+// need to figure out how to make filters[organization_id] the field, also receiver,initiators in the value
+
+    if (organization_id != undefined){
+        arguments[organization_id] = organization_id;
+    }
+
+    if (people_ids != undefined){
+        arguments['filters[people_ids]'] = people_ids;
+    }
+
+    if (interaction_type != undefined){
+        arguments['filters[interaction_type]'] = interaction_type;
+    }
+
+    arguments['include'] = 'receiver,initiators';
+
+    queryMissionHub('interactions', arguments, function(json) {
+
+    });
 }
 
 
 // Helper function to query a given endpoint on mission hub with a given set of
 // URL parameters
-var queryMissionHub = function(endpoint, options, successCallback)
-{
-    var url = base_url + endpoint + '?secret=' + secret + '&organization_id=941';
-    console.log(url);
+var queryMissionHub = function(endpoint, options, successCallback){
+    var url = base_url + endpoint + '?secret=' + secret;
+    
     $.each(options, function(key, value) {
         url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
     });
+    console.log(url);
 
     $.ajax({
         type: "GET",
@@ -100,3 +120,4 @@ var queryMissionHub = function(endpoint, options, successCallback)
         }
     });
 }
+getInteractionTree(941, 12345, 1)
