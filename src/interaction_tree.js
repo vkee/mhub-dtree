@@ -1,3 +1,72 @@
+<!-- Google Chart -->
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawSeriesChart);
+
+function drawSeriesChart() {
+  function selectHandler() {
+      var selectedItem = chart.getSelection()[0];
+      if (selectedItem) {
+        var person = data.getValue(selectedItem.row, 0);
+        alert('The user selected ' + person);
+        dataview = new google.visualization.DataView(data);
+        dataview.hideRows([0,1,2])
+        // you can also use dataview.setColumns([1,2]) to show only selected columns and hide the rest
+        chart.draw(dataview, options)
+      }
+    }
+
+    google.visualization.events.addListener(chart, 'select', selectHandler);
+}
+var dataCallback = function(data2){
+  // console.log('data');
+  // console.log(data2);
+  dataToDisplay = [];
+  dataToDisplay.push(['ID', 'Days Since Last Interaction', '# of Interactions', 'Group',     'Size']);
+    for (i = 0; i < data2.length; i++) {
+        dataToDisplay.push([data2[i], i+1, i+1, "Interactions", 5]);
+    }
+    // console.log(dataToDisplay);
+    var dataTable = google.visualization.arrayToDataTable(dataToDisplay);
+
+  var options = {
+    series: {
+        Leader: { color: '#e2431e' },
+        Community: { color: '#e7711b' },
+        Interactions: { color: '#f1ca3a' },
+    },
+    title: 'Asaph Yuan',
+    // explorer: { axis: 'horizontal', keepInBounds: true },
+    hAxis: {title: 'Days Since Last Interaction', viewWindowMode:'explicit',
+          viewWindow:{
+            max:100,
+            min:-8
+          }},
+    vAxis: {title: 'Number of Interactions', viewWindowMode:'explicit',
+          viewWindow:{
+            max:12,
+            min:0
+          }},
+    bubble: {textStyle: {fontSize: 11},
+      color: 'green',
+      textStyle: {
+        auraColor: 'none'
+  }}
+
+  };
+
+  var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div') );
+    chart.draw(dataTable, options);
+}
+
+$(document).ready(function(){
+  $('#display_button').click(function(){
+    var dataToDisplay = []
+    var formElements = document.forms['form'].elements['name'].value;
+    getPersonInteractions(formElements, "941", dataCallback);
+
+  });
+});
+
 var base_url = 'https://stage.missionhub.com/apis/v3/',
     rootLeaders = [],
     discipleship = new Graph(),
@@ -42,7 +111,7 @@ var getLeaders = function(organization_id) {
     // Query mission hub for the list of people that are leaders but not a member
     // of any group themselves.
     queryMissionHub('people', {'organization_id': organization_id,'filters[group_role]': 'leader'}, function(json) {
-        
+
         leaders = [];
 
         //Parse through the data from Missionhub and just take ID and name
@@ -104,7 +173,7 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type_
             name = interaction.receiver.first_name + ' ' + interaction.receiver.last_name;
             names.push(name);
         })
-        callback(names);        
+        callback(names);
     });
 }
 
@@ -123,7 +192,7 @@ var returnNames = function(names){
 // URL parameters
 var queryMissionHub = function(endpoint, options, successCallback){
     var url = base_url + endpoint + '?secret=' + secret;
-    
+
     $.each(options, function(key, value) {
         url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(value);
     });
