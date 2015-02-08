@@ -17,10 +17,10 @@ Space out the nodes in the graph better.
 Open visualization.html in a web browser. The organization id is hard coded as BU.
 Enter a name and click display to show the interactions
 
-TODO in the Interactions Viewer
-Calculate the day since last met
-Add leaders
-Add friends in similar labels
-Enable hiding/showing the difference labels
-Show number of people talked to/choose to follow Jesus/total number of people reached
-Add school picker
+TODO in the Interactions Viewer  
+Calculate the day since last met  
+Add leaders  
+Add friends in similar labels  
+Enable hiding/showing the difference labels  
+Show number of people talked to/choose to follow Jesus/total number of people reached  
+Add school picker  
