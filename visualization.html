@@ -57,7 +57,7 @@
         ['Mustafa',    43,              3,      'Interactions',         5],
         ['Andy',    22,               2,      'Interactions',         5]
       ]);
-
+      console.log(data);
       var options = {
         series: {
             Leader: { color: '#e2431e' },
@@ -116,22 +116,69 @@
         // };
         // google.visualization.events.addListener(chart, 'click', handler);
     }
-    var dataCallback = function(name, organization_id){
-        queryMissionHub('people', {'organization_id': organization_id, 'filters[name_like]': name}, function(json){
-            getInteractionTree(organization_id, json.people[0].id, 1, returnNames);
-        });
+    var dataCallback = function(data2){
+      console.log('data');
+      console.log(data2);
+      dataToDisplay = [];
+      dataToDisplay.push(['ID', 'Days Since Last Interaction', '# of Interactions', 'Group',     'Size']);
+        for (i = 0; i < data2.length; i++) {
+            dataToDisplay.push([data2[i], i+1, i+1, "Interactions", 5]);
+        }
+        console.log(dataToDisplay);
+        var dataTable = google.visualization.arrayToDataTable(data2);
+        console.log(dataTable);
+        
+      //   dataview = new google.visualization.DataView(data);
+      var data = google.visualization.arrayToDataTable([
+        ['ID', 'Days Since Last Interaction', '# of Interactions', 'Group',     'Size'],
+        ['Todd',    80,              5,      'Leader',  5],
+        ['Ethan',    23,              2,      'Leader',  5],
+        ['Ja-Hon',    1,              10,      'Community',    5],
+        ['Kate',    69,              1,       'Community',    5],
+        ['Annalee',    1,              4,      'Community',    5],
+        ['Dieter',    49,              2,         'Interactions',         5],
+        ['Jimmy',    63,              6,      'Interactions',    5],
+        ['Igor',    1,               3,      'Interactions',         5],
+        ['Mustafa',    43,              3,      'Interactions',         5],
+        ['Bob',    22,               2,      'Interactions',         5]
+      ]);
+
+      var options = {
+        series: {
+            Leader: { color: '#e2431e' },
+            Community: { color: '#e7711b' },
+            Interactions: { color: '#f1ca3a' },
+        },
+        title: 'Asaph Yuan',
+        // explorer: { axis: 'horizontal', keepInBounds: true },
+        hAxis: {title: 'Days Since Last Interaction', viewWindowMode:'explicit',
+              viewWindow:{
+                max:100,
+                min:-8
+              }},
+        vAxis: {title: 'Number of Interactions', viewWindowMode:'explicit',
+              viewWindow:{
+                max:12,
+                min:0
+              }},
+        bubble: {textStyle: {fontSize: 11},
+          color: 'green',
+          textStyle: {
+            auraColor: 'none'
+      }}
+
+      };
+
+      var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div') );
+        chart.draw(data, options);
     }
 
     $(document).ready(function(){
       $('#display_button').click(function(){
         var dataToDisplay = []
         var formElements = document.forms['form'].elements['name'].value;
-        var data2 = functiongetPersonInteractions(formElements, "941");
-        console.log(data2);
-        for (i = 0; i < data2.length; i++) {
-            dataToDisplay.push([data2[i], i, i, "Interactions", 5]);
-        }
-        console.log(dataToDisplay);
+        getPersonInteractions(formElements, "941", dataCallback);
+        
       });
     });
 

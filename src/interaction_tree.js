@@ -108,9 +108,9 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type_
     });
 }
 
-var getPersonInteractions = function(name, organization_id){
+var getPersonInteractions = function(name, organization_id, callback){
     queryMissionHub('people', {'organization_id': organization_id, 'filters[name_like]': name}, function(json){
-        getInteractionTree(organization_id, json.people[0].id, 1, returnNames);
+        getInteractionTree(organization_id, json.people[0].id, 1, callback);
     });
 }
 
