@@ -92,14 +92,23 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type_
         arguments['filters[people_ids]'] = people_ids;
     }
 
-    if (interaction_type != undefined){
+    if (interaction_type_ids != undefined){
         arguments['filters[interaction_type_ids]'] = interaction_type_ids;
     }
 
     arguments['include'] = 'receiver,initiators';
 
     queryMissionHub('interactions', arguments, function(json) {
+        console.log('interactions');
+        console.log(json);
+    });
+}
 
+var getPersonInteractions = function(name, organization_id){
+    queryMissionHub('people', {'organization_id': organization_id, 'filters[name_like]': name}, function(json){
+        console.log('person');
+        console.log(json);
+        getInteractionTree(organization_id, json.people[0].id, 1);
     });
 }
 
