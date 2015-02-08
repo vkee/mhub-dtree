@@ -14,6 +14,8 @@ Change the API so the names are returned in one call rather than having the hack
 Space out the nodes in the graph better.
 
 # Running the Interactions Viewer
+Open visualization.html in a web browser. The organization id is hard coded as BU.
+Enter a name and click display to show the interactions
 
 TODO in the Interactions Viewer
 Calculate the day since last met
