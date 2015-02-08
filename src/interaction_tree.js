@@ -15,6 +15,11 @@ var makeNode = function(person) {
     }
 }
 
+// Create an edge between two nodes
+var makeEdge = function(node1, node2) {
+    discipleship.addEdge(node1, node2);
+}
+
 // Get all the organizations
 var getOrganizations = function(){
     queryMissionHub('organizations', {}, function(json){
@@ -26,7 +31,8 @@ var getOrganizations = function(){
                 id: org.id
             })
         });
-
+        console.log('organizations');
+        console.log(organizations);
         // render organizations on the home page
     });
 }
@@ -75,13 +81,11 @@ var getPeople = function(organization_id) {
 // initiator_ids seems to be broken
 // https://stage.missionhub.com/apis/v3/interactions?secret=a3c29680ae9cb5b1c028b56578466153&organization_id=941&filters[receiver_ids]=1403488&include=receiver,initiators
 
-var getInteractionTree = function(organization_id, people_ids, interaction_type){
+var getInteractionTree = function(organization_id, people_ids, interaction_type_ids){
     arguments = {};
 
-// need to figure out how to make filters[organization_id] the field, also receiver,initiators in the value
-
     if (organization_id != undefined){
-        arguments[organization_id] = organization_id;
+        arguments['organization_id'] = organization_id;
     }
 
     if (people_ids != undefined){
@@ -89,7 +93,7 @@ var getInteractionTree = function(organization_id, people_ids, interaction_type)
     }
 
     if (interaction_type != undefined){
-        arguments['filters[interaction_type]'] = interaction_type;
+        arguments['filters[interaction_type_ids]'] = interaction_type_ids;
     }
 
     arguments['include'] = 'receiver,initiators';
@@ -120,4 +124,4 @@ var queryMissionHub = function(endpoint, options, successCallback){
         }
     });
 }
-getInteractionTree(941, 12345, 1)
+// getInteractionTree(941, 12345, 1)
